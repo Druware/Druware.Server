@@ -58,10 +58,10 @@ namespace Druware.Server
 
                 using (var client = new SmtpClient(new ProtocolLogger(Console.OpenStandardOutput())))
                 {
-                    client.Connect(Configuration.HostName, Configuration.Port, SecureSocketOptions.SslOnConnect);
+                    client.Connect(Configuration.HostName, (int)Configuration.Port!, SecureSocketOptions.SslOnConnect);
 
                     // Note: only needed if the SMTP server requires authentication
-                    client.Authenticate(Configuration.UserName, Configuration.Password.Decrypt(AssemblyName));
+                    client.Authenticate(Configuration.UserName, Configuration.Password!.Decrypt(AssemblyName));
 
                     client.Send(message);
                     client.Disconnect(true);

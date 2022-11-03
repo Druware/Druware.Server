@@ -6,30 +6,24 @@ namespace Druware.Server.Results
 {
     public class ListResult : Result
     {
-        public static new ListResult Error(string? message = null)
-        {
-            ListResult result = new()
-            {
-                Succeeded = false,
-                Message = message,
-                Errors = new List<string>()
-            };
-            return result;
-        }
-
         public static ListResult Ok(
             long total, int page, int perPage, IList list,
-            string? message = null)
+            string? info = null)
         {
             ListResult result = new()
             {
                 Succeeded = true,
-                Message = message,
+                Info = null,
                 Page = page,
                 TotalRecords = total,
                 PerPage = perPage,
                 List = list
             };
+            if (info != null)
+            {
+                result.Info = new();
+                result.Info!.Add(info);
+            }
             return result;
         }
 

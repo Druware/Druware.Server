@@ -5,34 +5,54 @@ namespace Druware.Server.Results
 {
     public class Result
     {
-        public static Result Error(string? message = null)
+        public static Result Error(List<string>? info = null)
         {
             Result result = new()
             {
                 Succeeded = false,
-                Message = message,
-                Errors = new List<string>()
+                Info = info == null ? new() : info
             };
             return result;
         }
 
+        public static Result Error(string? info = null)
+        {
+            Result result = new()
+            {
+                Succeeded = false,
+                Info = new()
+            };
+            if (info != null)
+                result.Info!.Add(info);
+            return result;
+        }
+
         public static Result Ok(
-            string? message = null,
-            string? token = null)
+            List<string>? info = null)
         {
             Result result = new()
             {
                 Succeeded = true,
-                Message = message
+                Info = info == null ? new() : info
             };
+            return result;
+        }
+
+        public static Result Ok(string? info = null)
+        {
+            Result result = new()
+            {
+                Succeeded = true,
+                Info = new()
+            };
+            if (info != null)
+                result.Info!.Add(info);
             return result;
         }
 
         public bool Succeeded { get; set; } = false;
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string? Message { get; set; }
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public List<string>? Errors { get; set; } = null;
+        public List<string>? Info { get; set; } = null;
     }
 }
 
