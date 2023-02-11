@@ -6,18 +6,17 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Druware.Server.Migrations
 {
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.EnsureSchema(
-                name: "Customer");
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
+                    Discriminator = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
                     Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "text", nullable: true)
@@ -28,21 +27,20 @@ namespace Druware.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "User",
-                schema: "Customer",
+                name: "AspNetUsers",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
                     FirstName = table.Column<string>(type: "text", nullable: true),
                     LastName = table.Column<string>(type: "text", nullable: true),
-                    UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
                     PasswordHash = table.Column<string>(type: "text", nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     SecurityStamp = table.Column<string>(type: "text", nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "text", nullable: true),
+                    UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
                     PhoneNumber = table.Column<string>(type: "text", nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(type: "boolean", nullable: false),
                     TwoFactorEnabled = table.Column<bool>(type: "boolean", nullable: false),
@@ -52,7 +50,7 @@ namespace Druware.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -90,10 +88,9 @@ namespace Druware.Server.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUserClaims_User_UserId",
+                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalSchema: "Customer",
-                        principalTable: "User",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -111,10 +108,9 @@ namespace Druware.Server.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
-                        name: "FK_AspNetUserLogins_User_UserId",
+                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalSchema: "Customer",
-                        principalTable: "User",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -136,10 +132,9 @@ namespace Druware.Server.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AspNetUserRoles_User_UserId",
+                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalSchema: "Customer",
-                        principalTable: "User",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -157,22 +152,22 @@ namespace Druware.Server.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
                     table.ForeignKey(
-                        name: "FK_AspNetUserTokens_User_UserId",
+                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalSchema: "Customer",
-                        principalTable: "User",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                columns: new[] { "Id", "ConcurrencyStamp", "Description", "Discriminator", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "43ac08c2-d59c-414b-adf5-820b710b3f3f", "01a474a2-4d92-4eac-a2a2-7f792902bd69", "User", "USER" },
-                    { "e044fdba-6628-4ce7-b13a-82298e0ce7e3", "8787ad6a-45bd-4b15-8e4a-f52814e2f4ee", "Administrator", "ADMINISTRATOR" },
-                    { "efdd4453-d4d2-4267-8e3d-727f7e4a8418", "c163f8f6-c21b-435c-a47a-97f2f690b6c4", "Visitor", "VISITOR" }
+                    { "8c15a666-83db-4bab-b936-7ab5fcd9699c", "db5969c1-a4dd-4502-8b25-ee8169cb102b", "User Manager", "Role", "42EECE03-4648-4FF5-9A6B-A39784B7B13A", "42EECE03-4648-4FF5-9A6B-A39784B7B13A" },
+                    { "b160a2c2-8951-4070-9b17-5ec552ad7976", "53e8e9d0-7534-44ba-9366-f975310d3878", "Confirmed User ", "Role", "99ED04E0-8BBC-491C-9B8A-9E287BC736F3", "99ED04E0-8BBC-491C-9B8A-9E287BC736F3" },
+                    { "c0fdf426-dede-4066-a124-ea527eb4dc1b", "57ca659d-11bf-470e-bc15-5656db88bf9c", "System Administrator", "Role", "0CF5915A-E9A2-49F8-B942-AD1D7815F4B7", "0CF5915A-E9A2-49F8-B942-AD1D7815F4B7" },
+                    { "eb5ea919-676b-445c-8192-58917714e5c2", "574c9eb5-cd54-49b6-9a48-c2d0cbf2ae79", "Unconfirmed User", "Role", "8471156C-132F-41BE-BD21-D5EB20953DA2", "8471156C-132F-41BE-BD21-D5EB20953DA2" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -203,14 +198,12 @@ namespace Druware.Server.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
-                schema: "Customer",
-                table: "User",
+                table: "AspNetUsers",
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
-                schema: "Customer",
-                table: "User",
+                table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
         }
@@ -236,8 +229,7 @@ namespace Druware.Server.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "User",
-                schema: "Customer");
+                name: "AspNetUsers");
         }
     }
 }

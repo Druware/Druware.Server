@@ -55,18 +55,15 @@
     <None Remove="Entities\" />
     <None Remove="Entities\Configuration\" />
     <None Remove="Models\" />
-    <None Remove="Results\" />
-    <None Remove="Controllers\" />
     <None Remove="MailKit" />
     <None Remove="Microsoft.EntityFrameworkCore.Design" />
     <None Remove="Microsoft.Extensions.DependencyInjection" />
     <None Remove="Druware.Extensions" />
+    <None Remove="RESTfulFoundation.Server" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\" />
     <Folder Include="Entities\Configuration\" />
     <Folder Include="Models\" />
-    <Folder Include="Results\" />
-    <Folder Include="Controllers\" />
   </ItemGroup>
 </Project>

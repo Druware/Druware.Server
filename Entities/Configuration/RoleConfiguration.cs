@@ -5,26 +5,36 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Druware.Server.Entities.Configuration
 {
-    public class RoleConfiguration : IEntityTypeConfiguration<IdentityRole>
+    public class RoleConfiguration : IEntityTypeConfiguration<Role>
     {
-        public void Configure(EntityTypeBuilder<IdentityRole> builder)
+        public void Configure(EntityTypeBuilder<Role> builder)
         {
             builder.HasData(
-                new IdentityRole
+                new Role
                 {
-                    Name = "Visitor",
-                    NormalizedName = "VISITOR"
+                    Description = "Unconfirmed User",
+                    Name = UserSecurityRole.Unconfirmed,
+                    NormalizedName = UserSecurityRole.Unconfirmed.ToUpper()
                 },
-                new IdentityRole
+                new Role
                 {
-                    Name = "User",
-                    NormalizedName = "USER"
+                    Description = "Confirmed User ",
+                    Name = UserSecurityRole.Confirmed,
+                    NormalizedName = UserSecurityRole.Confirmed.ToUpper()
                 },
-                new IdentityRole
+                new Role
                 {
-                    Name = "Administrator",
-                    NormalizedName = "ADMINISTRATOR"
-                });
+                    Description = "User Manager",
+                    Name = UserSecurityRole.Manager,
+                    NormalizedName = UserSecurityRole.Manager.ToUpper()
+                },
+                new Role
+                {
+                    Description = "System Administrator",
+                    Name = UserSecurityRole.SystemAdministrator,
+                    NormalizedName = UserSecurityRole.SystemAdministrator.ToUpper()
+                }
+            );
         }
     }
 }

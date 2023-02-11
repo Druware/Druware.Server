@@ -8,7 +8,7 @@ namespace Druware.Server.Entities.Configuration
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.ToTable("User", "Customer");
+            // builder.ToTable("User", "Customer");
             //builder.HasMany(e => e.Organizations)
             //    .WithOne(o => o.Owner)
             //    .HasForeignKey(s => s.OwnerId);

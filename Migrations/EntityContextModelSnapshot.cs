@@ -89,7 +89,7 @@ namespace Druware.Server.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("User", "Customer");
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -99,6 +99,10 @@ namespace Druware.Server.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -117,28 +121,7 @@ namespace Druware.Server.Migrations
 
                     b.ToTable("AspNetRoles", (string)null);
 
-                    b.HasData(
-                        new
-                        {
-                            Id = "efdd4453-d4d2-4267-8e3d-727f7e4a8418",
-                            ConcurrencyStamp = "c163f8f6-c21b-435c-a47a-97f2f690b6c4",
-                            Name = "Visitor",
-                            NormalizedName = "VISITOR"
-                        },
-                        new
-                        {
-                            Id = "43ac08c2-d59c-414b-adf5-820b710b3f3f",
-                            ConcurrencyStamp = "01a474a2-4d92-4eac-a2a2-7f792902bd69",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        },
-                        new
-                        {
-                            Id = "e044fdba-6628-4ce7-b13a-82298e0ce7e3",
-                            ConcurrencyStamp = "8787ad6a-45bd-4b15-8e4a-f52814e2f4ee",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        });
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityRole");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -245,6 +228,50 @@ namespace Druware.Server.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Druware.Server.Entities.Role", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.HasDiscriminator().HasValue("Role");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "eb5ea919-676b-445c-8192-58917714e5c2",
+                            ConcurrencyStamp = "574c9eb5-cd54-49b6-9a48-c2d0cbf2ae79",
+                            Name = "8471156C-132F-41BE-BD21-D5EB20953DA2",
+                            NormalizedName = "8471156C-132F-41BE-BD21-D5EB20953DA2",
+                            Description = "Unconfirmed User"
+                        },
+                        new
+                        {
+                            Id = "b160a2c2-8951-4070-9b17-5ec552ad7976",
+                            ConcurrencyStamp = "53e8e9d0-7534-44ba-9366-f975310d3878",
+                            Name = "99ED04E0-8BBC-491C-9B8A-9E287BC736F3",
+                            NormalizedName = "99ED04E0-8BBC-491C-9B8A-9E287BC736F3",
+                            Description = "Confirmed User "
+                        },
+                        new
+                        {
+                            Id = "8c15a666-83db-4bab-b936-7ab5fcd9699c",
+                            ConcurrencyStamp = "db5969c1-a4dd-4502-8b25-ee8169cb102b",
+                            Name = "42EECE03-4648-4FF5-9A6B-A39784B7B13A",
+                            NormalizedName = "42EECE03-4648-4FF5-9A6B-A39784B7B13A",
+                            Description = "User Manager"
+                        },
+                        new
+                        {
+                            Id = "c0fdf426-dede-4066-a124-ea527eb4dc1b",
+                            ConcurrencyStamp = "57ca659d-11bf-470e-bc15-5656db88bf9c",
+                            Name = "0CF5915A-E9A2-49F8-B942-AD1D7815F4B7",
+                            NormalizedName = "0CF5915A-E9A2-49F8-B942-AD1D7815F4B7",
+                            Description = "System Administrator"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
