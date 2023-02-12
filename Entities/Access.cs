@@ -19,24 +19,22 @@
  */
 
 using System;
-using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Identity;
 
 namespace Druware.Server.Entities
 {
     /// <summary>
-    /// 
+    /// The Access entity represents a single line item in the Access Log that
+    /// shows who accessed what resource, when for auditing and analysis
+    /// purposes
     /// </summary>
-    public class Role : IdentityRole
-	{
-		public Role()
-		{
-		}
-
-		public string? Description { get; set; }
-        [JsonIgnore]
-        public override string? ConcurrencyStamp { get; set; }
+    public class Access
+    {
+        public long Id { get; set; }
+        public string? Who { get; set; }
+        public string? What { get; set; }
+        public string? Where { get; set; }
+        public DateTime When { get; set; } = DateTime.UtcNow;
+        public string? How { get; set; }
     }
 }
 

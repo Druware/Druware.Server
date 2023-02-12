@@ -19,36 +19,42 @@
  */
 
 using System;
+using Druware.Server.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Druware.Server.Entities.Configuration
 {
     /// <summary>
-    /// Configure the User object as the foundation of all authentication
-    /// activities. The User object extends the Identity Framework AspNetUser/
-    /// IdentityUser object.
+    /// Configure the Access object for logging all authenticated asset access 
     /// </summary>
-    public class UserConfiguration : IEntityTypeConfiguration<User>
+    public class AccessConfiguration : IEntityTypeConfiguration<Access>
     {
         /// <summary>
         /// Called from the Context's OnModelCreateing() method, which in turn
-        /// calls the ModelBuilder.ApplyConfiguration(new UserConfiguration());
+        /// calls the ModelBuilder.ApplyConfiguration(new TagConfiguration());
         ///
-        /// This configuration creates database backed storage of the entity
+        /// This configuration creates base tag pool that will be used thoughout
         /// </summary>
         /// <param name="entity"></param>
-        public void Configure(EntityTypeBuilder<User> entity)
+        public void Configure(EntityTypeBuilder<Access> entity)
         {
-            entity.ToTable("User", "auth");
+            entity.ToTable("Access", "logs");
 
-            entity.Property(e => e.Registered)
-                .HasColumnName("Registered")
-                .HasDefaultValueSql("now()"); // PostgreSQL version
+            entity.Property(e => e.Id);
 
-            entity.Property(e => e.SessionExpires)
-                .HasColumnName("SessionExpires");
+            entity.Property(e => e.Who)
+                .IsRequired()
+                .HasMaxLength(278);
+            entity.Property(e => e.What)
+                .HasMaxLength(278);
+            entity.Property(e => e.Where)
+                .HasMaxLength(255);
+            entity.Property(e => e.When)
+                .IsRequired()
+                .HasDefaultValueSql("now()");
+            entity.Property(e => e.How)
+                .HasMaxLength(32);
         }
     }
 }
-

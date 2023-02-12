@@ -3,6 +3,7 @@ using System;
 using Druware.Server;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,10 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Druware.Server.Migrations
 {
-    [DbContext(typeof(EntityContext))]
-    partial class EntityContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(ServerContext))]
+    [Migration("20230212181036_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +23,61 @@ namespace Druware.Server.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Druware.Server.Entities.Access", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("How")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<string>("What")
+                        .HasMaxLength(278)
+                        .HasColumnType("character varying(278)");
+
+                    b.Property<DateTime>("When")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("Where")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Who")
+                        .IsRequired()
+                        .HasMaxLength(278)
+                        .HasColumnType("character varying(278)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Access", "logs");
+                });
+
+            modelBuilder.Entity("Druware.Server.Entities.Tag", b =>
+                {
+                    b.Property<long?>("TagId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long?>("TagId"));
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.HasKey("TagId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Tag", (string)null);
+                });
 
             modelBuilder.Entity("Druware.Server.Entities.User", b =>
                 {
@@ -70,8 +127,18 @@ namespace Druware.Server.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<DateTime?>("Registered")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("Registered")
+                        .HasDefaultValueSql("now()");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
+
+                    b.Property<DateTime?>("SessionExpires")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("SessionExpires");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
@@ -89,7 +156,7 @@ namespace Druware.Server.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("User", "auth");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -99,10 +166,6 @@ namespace Druware.Server.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -120,8 +183,6 @@ namespace Druware.Server.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityRole");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -237,37 +298,40 @@ namespace Druware.Server.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.HasDiscriminator().HasValue("Role");
+                    b.HasIndex("Description")
+                        .IsUnique();
+
+                    b.ToTable("Role", "auth");
 
                     b.HasData(
                         new
                         {
-                            Id = "eb5ea919-676b-445c-8192-58917714e5c2",
-                            ConcurrencyStamp = "574c9eb5-cd54-49b6-9a48-c2d0cbf2ae79",
+                            Id = "5fc19324-76b9-4c54-b1b6-67feb42af9fa",
+                            ConcurrencyStamp = "c9fea904-d698-4ab1-b979-c7f6c849c9d3",
                             Name = "8471156C-132F-41BE-BD21-D5EB20953DA2",
                             NormalizedName = "8471156C-132F-41BE-BD21-D5EB20953DA2",
                             Description = "Unconfirmed User"
                         },
                         new
                         {
-                            Id = "b160a2c2-8951-4070-9b17-5ec552ad7976",
-                            ConcurrencyStamp = "53e8e9d0-7534-44ba-9366-f975310d3878",
+                            Id = "7fee2429-344b-49fe-952c-0159bf8269aa",
+                            ConcurrencyStamp = "61eef9d7-485f-4425-b829-2412bcac0cd1",
                             Name = "99ED04E0-8BBC-491C-9B8A-9E287BC736F3",
                             NormalizedName = "99ED04E0-8BBC-491C-9B8A-9E287BC736F3",
                             Description = "Confirmed User "
                         },
                         new
                         {
-                            Id = "8c15a666-83db-4bab-b936-7ab5fcd9699c",
-                            ConcurrencyStamp = "db5969c1-a4dd-4502-8b25-ee8169cb102b",
+                            Id = "9d1b0351-468a-438d-b4f8-7d5e2e0ebf95",
+                            ConcurrencyStamp = "aba4bfda-01cc-409d-9dff-26cf0ca88128",
                             Name = "42EECE03-4648-4FF5-9A6B-A39784B7B13A",
                             NormalizedName = "42EECE03-4648-4FF5-9A6B-A39784B7B13A",
                             Description = "User Manager"
                         },
                         new
                         {
-                            Id = "c0fdf426-dede-4066-a124-ea527eb4dc1b",
-                            ConcurrencyStamp = "57ca659d-11bf-470e-bc15-5656db88bf9c",
+                            Id = "df38cd28-d005-484e-a64a-d4c3c96b75ba",
+                            ConcurrencyStamp = "96f04fef-47e4-4cca-9c92-6c857352b141",
                             Name = "0CF5915A-E9A2-49F8-B942-AD1D7815F4B7",
                             NormalizedName = "0CF5915A-E9A2-49F8-B942-AD1D7815F4B7",
                             Description = "System Administrator"
@@ -321,6 +385,15 @@ namespace Druware.Server.Migrations
                     b.HasOne("Druware.Server.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Druware.Server.Entities.Role", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithOne()
+                        .HasForeignKey("Druware.Server.Entities.Role", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

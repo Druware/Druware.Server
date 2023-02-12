@@ -22,3 +22,17 @@ migration based upon that, it is not yet heavily tested though.
 Druware.Extensions
 Microsoft.Extensions.Configuration
 Microsoft.Extensions.Configuration.Binder
+
+## History
+
+See Changelog.md for detailed history
+
+## License
+
+This project is under the GPLv3 license, see the included LICENSE.txt file
+
+```
+Copyright 2019-2023 by:
+    Andy 'Dru' Satori @ Satori & Associates, Inc.
+    All Rights Reserved
+```
