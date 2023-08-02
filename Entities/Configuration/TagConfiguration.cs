@@ -41,11 +41,13 @@ namespace Druware.Server.Entities.Configuration
         /// <param name="entity"></param>
         public void Configure(EntityTypeBuilder<Tag> entity)
         {
-            entity.ToTable("Tag");
+            entity.ToTable("tag");
 
-            entity.Property(e => e.TagId);
+            entity.Property(e => e.TagId)
+                .HasColumnName("tag_id");
 
             entity.Property(e => e.Name)
+                .HasColumnName("name")
                 .HasMaxLength(64);
 
             // This Unique Index speeds lookup, but also prevents duplicates

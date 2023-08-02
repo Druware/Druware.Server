@@ -41,7 +41,7 @@ namespace Druware.Server.Entities.Configuration
         /// <param name="builder"></param>
         public void Configure(EntityTypeBuilder<Role> builder)
         {
-            builder.ToTable("Role", "auth");
+            builder.ToTable("role", "auth");
 
             // This Unique Index speeds lookup, but also prevents duplicates
             builder.HasIndex(e => e.Description)

@@ -53,7 +53,6 @@ namespace Druware.Server.Entities
         public DateTime? Registered { get; set; }
         public DateTime? SessionExpires { get; set; }
 
-
         public static async Task<User?> ByName(
             string? name,
             UserManager<User> userManager)
@@ -88,7 +87,7 @@ namespace Druware.Server.Entities
             await context.SaveChangesAsync();
         }
 
-        public static bool IsSesionExpired(this User user) =>
+        public static bool IsSessionExpired(this User user) =>
             user.SessionExpires < DateTime.UtcNow;
         
     }

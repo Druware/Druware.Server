@@ -39,21 +39,26 @@ namespace Druware.Server.Entities.Configuration
         /// <param name="entity"></param>
         public void Configure(EntityTypeBuilder<Access> entity)
         {
-            entity.ToTable("Access", "logs");
+            entity.ToTable("access", "logs");
 
             entity.Property(e => e.Id);
 
             entity.Property(e => e.Who)
+                .HasColumnName("who")
                 .IsRequired()
                 .HasMaxLength(278);
             entity.Property(e => e.What)
+                .HasColumnName("what")
                 .HasMaxLength(278);
             entity.Property(e => e.Where)
+                .HasColumnName("where")
                 .HasMaxLength(255);
             entity.Property(e => e.When)
+                .HasColumnName("when")
                 .IsRequired()
                 .HasDefaultValueSql("now()");
             entity.Property(e => e.How)
+                .HasColumnName("how")
                 .HasMaxLength(32);
         }
     }

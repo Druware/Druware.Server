@@ -57,7 +57,7 @@ namespace Druware.Server
             // check just to be safe.
             if (user == null) return Ok(Result.Error("Unable to find User"));
 
-            if (user.IsSesionExpired())
+            if (user.IsSessionExpired())
             {
                 // log the user out, and move on
                 await SignInManager.SignOutAsync();

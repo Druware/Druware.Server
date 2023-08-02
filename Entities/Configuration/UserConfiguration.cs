@@ -40,7 +40,7 @@ namespace Druware.Server.Entities.Configuration
         /// <param name="entity"></param>
         public void Configure(EntityTypeBuilder<User> entity)
         {
-            entity.ToTable("User", "auth");
+            entity.ToTable("user", "auth");
 
             entity.Property(e => e.Registered)
                 .HasColumnName("Registered")
