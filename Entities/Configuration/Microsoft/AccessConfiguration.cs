@@ -23,36 +23,43 @@ using Druware.Server.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Druware.Server.Entities.Configuration
+namespace Druware.Server.Entities.Configuration.Microsoft
 {
     /// <summary>
-    /// Configure the Tag object as a general use Tag pool throughout the system
-    /// Tags may not have duplicate names, and WILL through an error if a
-    /// duplicate as attemmpted to add. 
+    /// Configure the Access object for logging all authenticated asset access 
     /// </summary>
-    public class TagConfiguration : IEntityTypeConfiguration<Tag>
+    public class AccessConfiguration : IEntityTypeConfiguration<Access>
     {
         /// <summary>
-        /// Called from the Context's OnModelCreateing() method, which in turn
+        /// Called from the Context's OnModelCreating() method, which in turn
         /// calls the ModelBuilder.ApplyConfiguration(new TagConfiguration());
         ///
         /// This configuration creates base tag pool that will be used thoughout
         /// </summary>
         /// <param name="entity"></param>
-        public void Configure(EntityTypeBuilder<Tag> entity)
+        public void Configure(EntityTypeBuilder<Access> entity)
         {
-            entity.ToTable("tag");
+            entity.ToTable("access", "logs");
 
-            entity.Property(e => e.TagId)
-                .HasColumnName("tag_id");
+            entity.Property(e => e.Id);
 
-            entity.Property(e => e.Name)
-                .HasColumnName("name")
-                .HasMaxLength(64);
-
-            // This Unique Index speeds lookup, but also prevents duplicates
-            entity.HasIndex(e => e.Name)
-                .IsUnique();
+            entity.Property(e => e.Who)
+                .HasColumnName("who")
+                .IsRequired()
+                .HasMaxLength(278);
+            entity.Property(e => e.What)
+                .HasColumnName("what")
+                .HasMaxLength(278);
+            entity.Property(e => e.Where)
+                .HasColumnName("where")
+                .HasMaxLength(255);
+            entity.Property(e => e.When)
+                .HasColumnName("when")
+                .IsRequired()
+                .HasDefaultValueSql("getDate()");
+            entity.Property(e => e.How)
+                .HasColumnName("how")
+                .HasMaxLength(32);
         }
     }
 }

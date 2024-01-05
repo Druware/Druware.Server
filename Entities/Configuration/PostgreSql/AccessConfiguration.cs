@@ -23,7 +23,7 @@ using Druware.Server.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Druware.Server.Entities.Configuration
+namespace Druware.Server.Entities.Configuration.PostgreSql
 {
     /// <summary>
     /// Configure the Access object for logging all authenticated asset access 
@@ -31,7 +31,7 @@ namespace Druware.Server.Entities.Configuration
     public class AccessConfiguration : IEntityTypeConfiguration<Access>
     {
         /// <summary>
-        /// Called from the Context's OnModelCreateing() method, which in turn
+        /// Called from the Context's OnModelCreating() method, which in turn
         /// calls the ModelBuilder.ApplyConfiguration(new TagConfiguration());
         ///
         /// This configuration creates base tag pool that will be used thoughout

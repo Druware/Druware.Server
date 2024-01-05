@@ -63,9 +63,11 @@
     <None Remove="RESTfulFoundation.Server" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Entities\" />
-    <Folder Include="Entities\Configuration\" />
-    <Folder Include="Migrations\" />
+    <Folder Include="Migrations\Microsoft\" />
+    <Folder Include="Migrations\PostgreSQL\" />
     <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Druware.Extensions\Druware.Extensions.csproj" />
   </ItemGroup>
 </Project>

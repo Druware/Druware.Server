@@ -19,36 +19,40 @@
  */
 
 using System;
+using Druware.Server.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Druware.Server.Entities.Configuration
+namespace Druware.Server.Entities.Configuration.PostgreSql
 {
     /// <summary>
-    /// Configure the User object as the foundation of all authentication
-    /// activities. The User object extends the Identity Framework AspNetUser/
-    /// IdentityUser object.
+    /// Configure the Tag object as a general use Tag pool throughout the system
+    /// Tags may not have duplicate names, and WILL through an error if a
+    /// duplicate as attemmpted to add. 
     /// </summary>
-    public class UserConfiguration : IEntityTypeConfiguration<User>
+    public class TagConfiguration : IEntityTypeConfiguration<Tag>
     {
         /// <summary>
         /// Called from the Context's OnModelCreateing() method, which in turn
-        /// calls the ModelBuilder.ApplyConfiguration(new UserConfiguration());
+        /// calls the ModelBuilder.ApplyConfiguration(new TagConfiguration());
         ///
-        /// This configuration creates database backed storage of the entity
+        /// This configuration creates base tag pool that will be used thoughout
         /// </summary>
         /// <param name="entity"></param>
-        public void Configure(EntityTypeBuilder<User> entity)
+        public void Configure(EntityTypeBuilder<Tag> entity)
         {
-            entity.ToTable("user", "auth");
+            entity.ToTable("tag");
 
-            entity.Property(e => e.Registered)
-                .HasColumnName("Registered")
-                .HasDefaultValueSql("now()"); // PostgreSQL version
+            entity.Property(e => e.TagId)
+                .HasColumnName("tag_id");
 
-            entity.Property(e => e.SessionExpires)
-                .HasColumnName("SessionExpires");
+            entity.Property(e => e.Name)
+                .HasColumnName("name")
+                .HasMaxLength(64);
+
+            // This Unique Index speeds lookup, but also prevents duplicates
+            entity.HasIndex(e => e.Name)
+                .IsUnique();
         }
     }
 }
-

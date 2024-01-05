@@ -18,6 +18,8 @@
  *    All Rights Reserved
  */
 
+using static System.Int32;
+
 namespace Druware.Server.Entities
 {
     /// <summary>
@@ -29,8 +31,13 @@ namespace Druware.Server.Entities
     public class Tag
     {
         public long? TagId { get; set; }
-        public string? Name { get; set; } = null;
+        public string? Name { get; set; }
 
+        public Tag()
+        {
+            
+        }
+        
         private Tag(string name)
         {
             Name = name;
@@ -40,16 +47,15 @@ namespace Druware.Server.Entities
         {
             Tag? tag = null;
 
-            if (Int32.TryParse(value, out var id))
+            if (TryParse(value, out var id))
                 tag = context.Tags.SingleOrDefault(t => t.TagId == id);
             tag ??= context.Tags.SingleOrDefault(t => t.Name == value);
 
-            if (tag == null)
-            {
-                tag = new Tag(value);
-                context.Tags.Add(tag);
-                context.SaveChanges();
-            }
+            if (tag != null) return tag;
+            
+            tag = new Tag(value);
+            context.Tags.Add(tag);
+            context.SaveChanges();
 
             return tag;
         }

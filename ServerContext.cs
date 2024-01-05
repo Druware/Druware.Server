@@ -18,75 +18,137 @@
  *    All Rights Reserved
  */
 
-using System;
+// After an enormous amount of thought, this needs to be reworked to be smart 
+// to support both DbTypes internally, and the platform specific classes 
+// exist only for migrations.
+
 using Druware.Server.Entities;
-using Druware.Server.Entities.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Druware.Server.Entities.Configuration;
 
-namespace Druware.Server
+namespace Druware.Server;
+
+// TODO: Add an Access Log for user auditing purposes
+
+public interface IServerContext
 {
-    // TODO: Add an Access Log for user auditing purposes
+    public abstract DbSet<Access> AccessLog { get; set; }
+    public abstract DbSet<Tag> Tags { get; set; }
+}
 
-    public class ServerContext : IdentityDbContext<User, IdentityRole, string>
+public class ServerContext : IdentityDbContext<User, IdentityRole, string>, IServerContext
+{
+    private readonly IConfiguration? _configuration;
+    
+    public ServerContext() { }
+
+    public ServerContext(IConfiguration? configuration) : base()
     {
-#if DEBUG
-        private const string cs = "Host=localhost;Database=druware;Username=postgres;Password=notforproduction";
-#endif
-
-        public ServerContext() : base() { }
-
-        public ServerContext(DbContextOptions<ServerContext> options)
-            : base(options) { }
-
-        #region Properties
-
-        public virtual DbSet<Access> AccessLog { get; set; } = null!;
-        public virtual DbSet<Tag> Tags { get; set; } = null!;
-
-        #endregion
-
-        #region Configuration
-
-        /// <summary>
-        /// Configure the User Context to use the database as defined by the
-        /// ApplicationSettings
-        /// </summary>
-        /// <param name="optionsBuilder"></param>
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-#if DEBUG
-            // We *should* never get here, and only in DEBUG mode
-            if (!optionsBuilder.IsConfigured)
-                optionsBuilder.UseNpgsql(cs); // this is the default
-#else
-            throw new Exception("No Connection String Provided");
-#endif
-        }
-
-        /// <summary>
-        /// Used for configuring the model and database contexts for use in the
-        /// application. 
-        /// </summary>
-        /// <param name="builder"></param>
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-
-            // Identity Framework Customizations
-            builder.ApplyConfiguration(new UserConfiguration());
-            builder.ApplyConfiguration(new RoleConfiguration());
-
-            // Druware.Server Entities
-            builder.ApplyConfiguration(new AccessConfiguration());
-            builder.ApplyConfiguration(new TagConfiguration());
-
-
-            // Ignored Classes
-            // builder.Ignore<NotMappedClass>();
-        }
-
-#endregion
+        _configuration = configuration;
     }
+
+    public ServerContext(DbContextOptions<ServerContext> options, IConfiguration? configuration)
+        : base(options)
+    {
+        _configuration = configuration;
+    }
+
+    #region Properties
+
+    public virtual DbSet<Access> AccessLog { get; set; } = null!;
+    public virtual DbSet<Tag> Tags { get; set; } = null!;
+
+    #endregion
+
+    #region Configuration
+
+    /// <summary>
+    /// Configure the User Context to use the database as defined by the
+    /// ApplicationSettings
+    /// </summary>
+    /// <param name="optionsBuilder"></param>
+    protected override void OnConfiguring(
+        DbContextOptionsBuilder optionsBuilder)
+    {
+        if (optionsBuilder.IsConfigured) return;
+        if (_configuration != null)
+        {
+            var settings = new AppSettings(_configuration!);
+            switch (settings.DbType)
+            {
+                case DbContextType.Microsoft:
+                    if (settings.ConnectionString != null)
+                        optionsBuilder.UseSqlServer(settings.ConnectionString);
+                    break;
+                case DbContextType.PostgreSql:
+                    if (settings.ConnectionString != null)
+                        optionsBuilder.UseNpgsql(settings.ConnectionString);
+                    break;
+                    default:
+                    throw new Exception(
+                        "There is no configuration for this DbType");
+            }
+            if (settings.ConnectionString != null)
+                optionsBuilder.UseSqlServer(settings.ConnectionString);
+            return;
+        }
+        
+    }
+
+    /// <summary>
+    /// Used for configuring the model and database contexts for use in the
+    /// application. 
+    /// </summary>
+    /// <param name="builder"></param>
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        Console.WriteLine("Initializing ServerContext");
+        base.OnModelCreating(builder);
+
+        var settings = new AppSettings(_configuration!);
+
+        switch (settings.DbType)
+        {
+            case DbContextType.Microsoft:
+                builder.ApplyConfiguration(
+                    new Druware.Server.Entities.Configuration.Microsoft.
+                        UserConfiguration());
+                builder.ApplyConfiguration(
+                    new Druware.Server.Entities.Configuration.Microsoft.
+                        RoleConfiguration());
+
+                // Druware.Server Entities
+                builder.ApplyConfiguration(
+                    new Druware.Server.Entities.Configuration.Microsoft.
+                        AccessConfiguration());
+                builder.ApplyConfiguration(
+                    new Druware.Server.Entities.Configuration.Microsoft.
+                        TagConfiguration());
+                break;
+            case DbContextType.PostgreSql:
+                builder.ApplyConfiguration(
+                    new Druware.Server.Entities.Configuration.PostgreSql.
+                        UserConfiguration());
+                builder.ApplyConfiguration(
+                    new Druware.Server.Entities.Configuration.PostgreSql.
+                        RoleConfiguration());
+
+                // Druware.Server Entities
+                builder.ApplyConfiguration(
+                    new Druware.Server.Entities.Configuration.PostgreSql.
+                        AccessConfiguration());
+                builder.ApplyConfiguration(
+                    new Druware.Server.Entities.Configuration.PostgreSql.
+                        TagConfiguration());
+                break;
+            default:
+                throw new Exception(
+                    "There is no configuration for this DbType");
+        }
+    }
+
+    #endregion
 }

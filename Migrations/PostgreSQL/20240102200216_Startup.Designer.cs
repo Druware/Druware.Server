@@ -9,11 +9,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Druware.Server.Migrations
+namespace Druware.Server.Migrations.PostgreSql
 {
-    [DbContext(typeof(ServerContext))]
-    [Migration("20230802032503_Init1")]
-    partial class Init1
+    [DbContext(typeof(ServerContextPostgreSql))]
+    [Migration("20240102200216_Startup")]
+    partial class Startup
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -313,32 +313,32 @@ namespace Druware.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "265b300e-4aba-4148-80f3-dc8904ebdac0",
-                            ConcurrencyStamp = "00133df8-0cae-4684-a118-f80e69449aa9",
+                            Id = "ac2b800d-c47f-48c4-a784-6d35effde9c8",
+                            ConcurrencyStamp = "0bbf1a82-ffbf-4567-82b6-493ce8d557e7",
                             Name = "8471156C-132F-41BE-BD21-D5EB20953DA2",
                             NormalizedName = "8471156C-132F-41BE-BD21-D5EB20953DA2",
                             Description = "Unconfirmed User"
                         },
                         new
                         {
-                            Id = "e68fd29a-f4e9-4211-aca0-ecf0bca26028",
-                            ConcurrencyStamp = "f1e5c653-7092-4824-8798-b0ba136dcb25",
+                            Id = "3d6426ac-9b9d-4699-97c3-f2e99564e896",
+                            ConcurrencyStamp = "df344cb5-b6d4-4978-99f2-e26e1abc93e5",
                             Name = "99ED04E0-8BBC-491C-9B8A-9E287BC736F3",
                             NormalizedName = "99ED04E0-8BBC-491C-9B8A-9E287BC736F3",
                             Description = "Confirmed User "
                         },
                         new
                         {
-                            Id = "b75bb68b-fbd3-4530-82d3-7ed4f2d7c02e",
-                            ConcurrencyStamp = "5dc7846c-d378-4478-946d-3db39436384c",
+                            Id = "d406a426-5b2a-4f29-b544-b4c2968a2447",
+                            ConcurrencyStamp = "9b2b963a-d025-4ff1-a6e2-e133a036587d",
                             Name = "42EECE03-4648-4FF5-9A6B-A39784B7B13A",
                             NormalizedName = "42EECE03-4648-4FF5-9A6B-A39784B7B13A",
                             Description = "User Manager"
                         },
                         new
                         {
-                            Id = "0490da41-e523-42e2-8e3f-5f0a1f1ca348",
-                            ConcurrencyStamp = "5483f397-975c-495a-99c5-6d366406f08f",
+                            Id = "272fd100-1f60-478a-a51d-c01279465618",
+                            ConcurrencyStamp = "5e6aabfb-3c12-4bdf-a077-109e09f5801b",
                             Name = "0CF5915A-E9A2-49F8-B942-AD1D7815F4B7",
                             NormalizedName = "0CF5915A-E9A2-49F8-B942-AD1D7815F4B7",
                             Description = "System Administrator"

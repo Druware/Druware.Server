@@ -23,7 +23,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Druware.Server.Entities.Configuration
+namespace Druware.Server.Entities.Configuration.PostgreSql
 {
     /// <summary>
     /// Configure the User object as the foundation of all authentication
