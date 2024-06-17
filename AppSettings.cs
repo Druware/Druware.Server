@@ -88,7 +88,7 @@ public class AppSettings
         {
             var dbTypeString = db.GetValue<string>("ConnectionType");
             if (dbTypeString.ToUpper() == "MSSQL") DbType = DbContextType.Microsoft;
-            if (dbTypeString.ToUpper() == "PostresSQL") DbType = DbContextType.PostgreSql;
+            if (dbTypeString.ToUpper() == "PostreSQL") DbType = DbContextType.PostgreSql;
             if (dbTypeString.ToUpper() == "PGSQL") DbType = DbContextType.PostgreSql;
 
             ConnectionString = db.GetValue<string>("ConnectionString");

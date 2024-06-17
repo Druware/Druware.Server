@@ -4,13 +4,27 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-        <Description>A simple set of extensions used by the Druware.Server Package(s).</Description>
+    <Description>A simple set of extensions used by the Druware.Server Package(s).</Description>
     <PackageId>Druware.Server</PackageId>
     <Version>1.0.0</Version>
     <Authors>Dru Satori</Authors>
     <Company>dru@druware.com</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/Druware/Druware.Server</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Druware/Druware.Server</RepositoryUrl>
+    <PackageReleaseNotes>CHANGELOG.md</PackageReleaseNotes>
+    <Copyright>Copyright 2019-2024 by:
+      Andy 'Dru' Satori @ Satori &amp; Associates, Inc.
+      All Rights Reserved</Copyright>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="LICENSE.txt" Pack="true" PackagePath="" />
+    <None Include="README.md" Pack="true" PackagePath="\"/>
+    <None Include="CHANGELOG.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.0" />
