@@ -34,6 +34,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="2.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.10" />
     <PackageReference Include="MailKit" Version="3.4.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.10" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.10">
@@ -79,6 +80,7 @@
   <ItemGroup>
     <Folder Include="Migrations\Microsoft\" />
     <Folder Include="Migrations\PostgreSQL\" />
+    <Folder Include="Migrations\Sqlite\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

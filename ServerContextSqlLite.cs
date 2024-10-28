@@ -1,29 +1,29 @@
 using Druware.Server.Entities;
-using Druware.Server.Entities.Configuration.PostgreSql;
+using Druware.Server.Entities.Configuration.Sqlite;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-// dotnet ef migrations add ProductTags --context ContentContextPostgreSql --output-dir ./Migrations/PostgreSql -- --provider Npgsql;    
+ // dotnet ef migrations add Startup --context ServerContextSqlite --output-dir ./Migrations/Sqlite -- --provider Sqlite;    
 
 namespace Druware.Server;
 
-public class ServerContextPostgreSql : IdentityDbContext<User, IdentityRole, string>, IServerContext
+public class ServerContextSqlite : IdentityDbContext<User, IdentityRole, string>, IServerContext
 {
     private readonly IConfiguration? _configuration;
     
-    public ServerContextPostgreSql()
+    public ServerContextSqlite()
     {
         
     }
     
-    public ServerContextPostgreSql(IConfiguration? configuration)
+    public ServerContextSqlite(IConfiguration? configuration)
     {
         _configuration = configuration;
     }
 
-    public ServerContextPostgreSql(DbContextOptions<ServerContextPostgreSql> options, IConfiguration? configuration)
+    public ServerContextSqlite(DbContextOptions<ServerContextSqlite> options, IConfiguration? configuration)
         : base(options)
     {
         _configuration = configuration;
@@ -51,15 +51,15 @@ public class ServerContextPostgreSql : IdentityDbContext<User, IdentityRole, str
         {
             var settings = new AppSettings(_configuration!);
             if (settings.ConnectionString != null)
-                optionsBuilder.UseNpgsql(settings.ConnectionString);
+                optionsBuilder.UseSqlite(settings.ConnectionString);
             return;
         }
 
 #if DEBUG
         // this is required to run any migration generation.  By default, we
         // leave it empty, and only populate it for generating migrations.
-        const string cs = "";
-        optionsBuilder.UseNpgsql(cs);
+        const string cs = "Data Source=./testing.db;Cache=Shared";
+        optionsBuilder.UseSqlite(cs);
 #endif
 
     }

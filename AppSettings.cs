@@ -14,7 +14,8 @@ public enum MailType
 public enum DbContextType
 {
     Microsoft,
-    PostgreSql
+    PostgreSql,
+    Sqlite
 };
 
 // A simple helper class to parse and read the known API Settings from the
@@ -88,8 +89,9 @@ public class AppSettings
         {
             var dbTypeString = db.GetValue<string>("ConnectionType");
             if (dbTypeString.ToUpper() == "MSSQL") DbType = DbContextType.Microsoft;
-            if (dbTypeString.ToUpper() == "PostreSQL") DbType = DbContextType.PostgreSql;
+            if (dbTypeString.ToUpper() == "POSTGRESQL") DbType = DbContextType.PostgreSql;
             if (dbTypeString.ToUpper() == "PGSQL") DbType = DbContextType.PostgreSql;
+            if (dbTypeString.ToUpper() == "SQLITE") DbType = DbContextType.Sqlite;
 
             ConnectionString = db.GetValue<string>("ConnectionString");
             if (string.IsNullOrEmpty(ConnectionString))

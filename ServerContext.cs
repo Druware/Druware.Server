@@ -144,6 +144,23 @@ public class ServerContext : IdentityDbContext<User, IdentityRole, string>, ISer
                     new Druware.Server.Entities.Configuration.PostgreSql.
                         TagConfiguration());
                 break;
+            
+            case DbContextType.Sqlite:
+                builder.ApplyConfiguration(
+                    new Druware.Server.Entities.Configuration.Sqlite.
+                        UserConfiguration());
+                builder.ApplyConfiguration(
+                    new Druware.Server.Entities.Configuration.Sqlite.
+                        RoleConfiguration());
+
+                // Druware.Server Entities
+                builder.ApplyConfiguration(
+                    new Druware.Server.Entities.Configuration.Sqlite.
+                        AccessConfiguration());
+                builder.ApplyConfiguration(
+                    new Druware.Server.Entities.Configuration.Sqlite.
+                        TagConfiguration());
+                break;
             default:
                 throw new Exception(
                     "There is no configuration for this DbType");
