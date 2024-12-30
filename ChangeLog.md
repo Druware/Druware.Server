@@ -1,5 +1,10 @@
 # Changelog
 
+## 2024-10-28
+
+* Added full SqlLit support to the library in order to support fully 
+  self-contained containers.
+
 ## 2023-02-11
 
 * Extended User to store both a session expiration and registration date

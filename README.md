@@ -32,7 +32,7 @@ See Changelog.md for detailed history
 This project is under the GPLv3 license, see the included LICENSE.txt file
 
 ```
-Copyright 2019-2023 by:
+Copyright 2019-2024 by:
     Andy 'Dru' Satori @ Satori & Associates, Inc.
     All Rights Reserved
 ```
