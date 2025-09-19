@@ -40,6 +40,8 @@ namespace Druware.Server
             string subject, string body) =>
             Send(to, from, replyTo, subject, body);
 
+        
+        // TODO: Move this to Async and then wrap the async call from the sync side.
         public void Send(string to, string from, string replyTo, string subject, string body)
         {
             try
@@ -63,7 +65,7 @@ namespace Druware.Server
 
                 using var client = new SmtpClient(new ProtocolLogger(Console.OpenStandardOutput()));
                 client.Connect(_configuration.HostName, (int)_configuration.Port!, SecureSocketOptions.SslOnConnect);
-                client.Authenticate(_configuration.UserName, _configuration.Password!.Decrypt(_assemblyName));
+                client.Authenticate(_configuration.UserName, _configuration.Password!.Decrypt(_assemblyName, "4D584868CCA84221823D53D80DB30FCB"));
 
                 client.Send(message);
                 client.Disconnect(true);

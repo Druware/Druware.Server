@@ -10,24 +10,17 @@ using RESTfulFoundation.Server;
 
 namespace Druware.Server
 {
-	public class CustomController : ControllerBase
+	public class CustomController(
+        IConfiguration configuration,
+        UserManager<User> userManager,
+        SignInManager<User> signInManager,
+        ServerContext context)
+        : ControllerBase
     {
-        protected readonly IConfiguration Configuration;
-        protected readonly UserManager<User> UserManager;
-        protected readonly SignInManager<User> SignInManager;
-        protected readonly ServerContext ServerContext;
-
-        public CustomController(
-            IConfiguration configuration,
-            UserManager<User> userManager,
-            SignInManager<User> signInManager,
-            ServerContext context)
-        {
-            Configuration = configuration;
-            SignInManager = signInManager;
-            UserManager = userManager;
-            ServerContext = context;
-        }
+        protected readonly IConfiguration Configuration = configuration;
+        protected readonly UserManager<User> UserManager = userManager;
+        protected readonly SignInManager<User> SignInManager = signInManager;
+        protected readonly ServerContext ServerContext = context;
 
         protected async Task LogRequest()
         {
