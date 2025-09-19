@@ -8,7 +8,7 @@ PKGNAME=`echo $PKGNAME | awk -F "/" '{print $NF}'`
 # Update the .nuspec
 
 # lookup the apikey ( if needed )
-APIKEY=`defaults read com.trustwin.nuget apikey`
+APIKEY=`defaults read com.druware.nuget apikey`
 VERSION=`grep -o -p '<version>.*</version>' $PKGNAME.nuspec | sed -n -r "s/^.*<version>(.*)<\/version>.*$/\1/p"` 
 
 # parse the number
