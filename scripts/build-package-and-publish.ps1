@@ -2,7 +2,7 @@
 $PKGNAME = Split-Path -Leaf (Get-Location)
 
 # Lookup the API key (if needed)
-$APIKEY = (reg query "HKEY_CURRENT_USER\SOFTWARE\com.trustwin.nuget" /v apikey 2>$null | ForEach-Object {
+$APIKEY = (reg query "HKEY_CURRENT_USER\SOFTWARE\druware@nuget.org" /v apikey 2>$null | ForEach-Object {
     $_ -match "apikey\s*REG_SZ\s*(.+)" | Out-Null; $matches[1]
 }) -replace "`r", ''
 
@@ -38,4 +38,4 @@ dotnet build . --configuration RELEASE
 
 dotnet pack -o "pub" --configuration Release
 
-dotnet nuget push "pub/$PKGNAME.$VERSION.nupkg" --source "https://nuget.satori-assoc.com/v3/index.json" --api-key $APIKEY
+dotnet nuget push "pub/$PKGNAME.$VERSION.nupkg" --source "https://nuget.org/v3/index.json" --api-key $APIKEY
