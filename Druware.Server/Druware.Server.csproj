@@ -41,7 +41,6 @@
     <Folder Include="Migrations\Microsoft\" />
     <Folder Include="Migrations\PostgreSQL\" />
     <Folder Include="Migrations\Sqlite\" />
-    <Folder Include="Models\" />
     <Folder Include="pub\" />
   </ItemGroup>
 
