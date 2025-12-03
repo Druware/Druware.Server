@@ -38,4 +38,4 @@ sed -r -i '' -e "s/^(.*)<version>(.*)<\/version>.*$/\1<version>$VERSION<\/versio
 
 dotnet build . --configuration RELEASE 
 nuget pack -OutputDirectory pub -Properties Configuration=Release
-nuget push pub/$PKGNAME.$VERSION.nupkg -ApiKey $APIKEY --source https://api.nuget.org/v3/index.json
+nuget push pub/$PKGNAME.$VERSION.nupkg -ApiKey $APIKEY -source https://api.nuget.org/v3/index.json
