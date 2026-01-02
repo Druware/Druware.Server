@@ -4,28 +4,50 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Description>A simple set of extensions used by the Druware.Server Package(s).</Description>
+
+    <!-- Package Information -->
+    <PackageId>Druware.Server</PackageId>
+    <Version>1.1.5</Version>
+    <Title>Druware.Server</Title>
+    <PackageTags>net6 net8 webapi</PackageTags>
+    <Description>
+      This is the core Druware Server class library that implements the
+      foundation logic, including utility functions, classes that are part
+      of the Druware pluggable applications modules.
+    </Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/Druware/Druware.SErver</RepositoryUrl>
     <Authors>Dru Satori</Authors>
     <Company>dru@druware.com</Company>
+    <Copyright>Copyright 2019-2026 by:
+      Andy 'Dru' Satori @ Druware Software Designs.
+      All Rights Reserved</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- PropertyGroup necessary references -->
+    <None Include="..\CHANGE.md" Pack="false" PackagePath="CHANGE.md"/>
+    <None Include="..\LICENSE.txt" Pack="true" PackagePath="LICENSE.txt"/>
+    <None Include="..\README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.0" />
-    <PackageReference Include="Druware.Extensions" Version="1.1.6" />
+    <PackageReference Include="Druware.Extensions" Version="1.1.*" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="2.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.*" />
     <PackageReference Include="MailKit" Version="3.4.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.*" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.11">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.*">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.11">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.22">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -34,18 +56,15 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.*" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.*" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.*" />
-    <PackageReference Include="RESTfulFoundation.Server" Version="1.0.0" />
+    <PackageReference Include="RESTfulFoundation.Server" Version="1.0.*" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <Folder Include="Migrations\Microsoft\" />
     <Folder Include="Migrations\PostgreSQL\" />
     <Folder Include="Migrations\Sqlite\" />
+    <Folder Include="Models\" />
     <Folder Include="pub\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="CHANGELOG.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
 </Project>

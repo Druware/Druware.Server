@@ -22,8 +22,7 @@ public enum DbContextType
 // AppSettings.  It exists as a convenience, nothing more.
 public class MailSettings
 {
-    public MailSettings(IConfigurationSection configuration,
-        MailType type = MailType.Smtp)
+    public MailSettings(IConfigurationSection configuration, string? userName = null, string? password = null, MailType type = MailType.Smtp)
     {
         // the passed in ConfigurationSection *should* be the Mail section.
         var keyPath = type switch
@@ -46,16 +45,16 @@ public class MailSettings
         Type = type;
     }
 
-    public string HostName { get; private set; }
-    public string UserName { get; private set; }
+    public string? HostName { get; private set; }
+    public string? UserName { get; private set; }
     public int Port { get; private set; }
-    public string Password { get; private set; }
+    public string? Password { get; private set; }
     public MailType Type { get; private set; }
 }
 
 public class NotificationSettings
 {
-    public NotificationSettings(IConfigurationSection section)
+    public NotificationSettings(IConfigurationSection section, string? from = null, string? name = null, string? to = null)
     {
         From = section.GetValue<string>("From");
         Name = section.GetValue<string>("Name");
@@ -64,9 +63,9 @@ public class NotificationSettings
             OnStartup = section.GetValue<bool>("OnStartup");
     }
 
-    public string From { get; private set; }
-    public string Name { get; private set; }
-    public string To { get; private set; }
+    public string? From { get; private set; }
+    public string? Name { get; private set; }
+    public string? To { get; private set; }
     public bool OnStartup { get; private set; } = true;
 }
 
@@ -88,17 +87,16 @@ public class AppSettings
         if (db.GetChildren().Any(item => item.Key == "ConnectionString"))
         {
             var dbTypeString = db.GetValue<string>("ConnectionType");
-            if (dbTypeString.ToUpper() == "MSSQL") DbType = DbContextType.Microsoft;
-            if (dbTypeString.ToUpper() == "POSTGRESQL") DbType = DbContextType.PostgreSql;
-            if (dbTypeString.ToUpper() == "PGSQL") DbType = DbContextType.PostgreSql;
-            if (dbTypeString.ToUpper() == "SQLITE") DbType = DbContextType.Sqlite;
+            if (dbTypeString?.ToUpper() == "MSSQL") DbType = DbContextType.Microsoft;
+            if (dbTypeString?.ToUpper() == "POSTGRESQL") DbType = DbContextType.PostgreSql;
+            if (dbTypeString?.ToUpper() == "PGSQL") DbType = DbContextType.PostgreSql;
+            if (dbTypeString?.ToUpper() == "SQLITE") DbType = DbContextType.Sqlite;
 
             ConnectionString = db.GetValue<string>("ConnectionString");
             if (string.IsNullOrEmpty(ConnectionString))
                 throw new Exception(
                     "Cannot Startup without a ConnectionString");
         }
-
 
         if (api.GetChildren().Any(item => item.Key == "ConfirmationUrl"))
             ConfirmationUrl = api.GetValue<string>("ConfirmationUrl");
