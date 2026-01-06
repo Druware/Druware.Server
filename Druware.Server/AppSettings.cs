@@ -98,6 +98,11 @@ public class AppSettings
         // the value found in the appsettings.json file, even if the altAppSettings is
         // provided
         var connectionString = configuration.GetValue<string>("connectionstring");
+        var altCs = Environment.GetEnvironmentVariable("SQLCONNSTR_DruwareAPI");
+        
+        // prefer the Azure environment string, then the command line, then the
+        // appsettings.json file.
+        connectionString = string.IsNullOrEmpty(connectionString) ? altCs : connectionString;
         ConnectionString =  string.IsNullOrEmpty(connectionString) ? ConnectionString : connectionString;
         
         if (string.IsNullOrEmpty(ConnectionString))
