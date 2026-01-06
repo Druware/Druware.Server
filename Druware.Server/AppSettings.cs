@@ -79,7 +79,8 @@ public class AppSettings
 
     public AppSettings(IConfiguration configuration)
     {
-        var cfg = configuration;
+        var cfg
+            = configuration;
 
         var api = cfg.GetSection("API");
 
@@ -91,12 +92,17 @@ public class AppSettings
             if (dbTypeString?.ToUpper() == "POSTGRESQL") DbType = DbContextType.PostgreSql;
             if (dbTypeString?.ToUpper() == "PGSQL") DbType = DbContextType.PostgreSql;
             if (dbTypeString?.ToUpper() == "SQLITE") DbType = DbContextType.Sqlite;
-
             ConnectionString = db.GetValue<string>("ConnectionString");
-            if (string.IsNullOrEmpty(ConnectionString))
-                throw new Exception(
-                    "Cannot Startup without a ConnectionString");
         }
+        // check the command line, if the connectionString is found there, override 
+        // the value found in the appsettings.json file, even if the altAppSettings is
+        // provided
+        var connectionString = configuration.GetValue<string>("connectionstring");
+        ConnectionString =  string.IsNullOrEmpty(connectionString) ? ConnectionString : connectionString;
+        
+        if (string.IsNullOrEmpty(ConnectionString))
+            throw new Exception(
+                "Cannot Startup without a ConnectionString");
 
         if (api.GetChildren().Any(item => item.Key == "ConfirmationUrl"))
             ConfirmationUrl = api.GetValue<string>("ConfirmationUrl");
