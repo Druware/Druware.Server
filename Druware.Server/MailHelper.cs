@@ -5,6 +5,7 @@ using MimeKit;
 using MimeKit.Text;
 using Druware.Extensions;
 using MailKit.Net.Smtp;
+using MailKit.Security;
 
 namespace Druware.Server
 {
@@ -172,11 +173,61 @@ namespace Druware.Server
             if (_configuration == null) return;
 
             using var client = new SmtpClient(new ProtocolLogger(Console.OpenStandardOutput()));
-            client.Connect(_configuration.HostName, (int)_configuration.Port!, SecureSocketOptions.SslOnConnect);
-            client.Authenticate(_configuration.UserName, _configuration.Password!.Decrypt(_assemblyName, "4D584868CCA84221823D53D80DB30FCB"));
+            client.Connect(_configuration.HostName, _configuration.Port, SecureSocketOptions.SslOnConnect);
+
+            AuthenticateClient(client);
 
             client.Send(message);
             client.Disconnect(true);
+        }
+
+        private void AuthenticateClient(SmtpClient client)
+        {
+            if (_configuration == null) return;
+
+            if (string.IsNullOrWhiteSpace(_configuration.UserName))
+                throw new InvalidOperationException("SMTP user name is required for mail authentication.");
+
+            switch (_configuration.AuthenticationType)
+            {
+                case MailAuthenticationType.OAuth2:
+                    AuthenticateWithOAuth2(client);
+                    break;
+
+                case MailAuthenticationType.Basic:
+                default:
+                    AuthenticateWithBasicCredentials(client);
+                    break;
+            }
+        }
+
+        private void AuthenticateWithBasicCredentials(SmtpClient client)
+        {
+            if (_configuration == null) return;
+
+            if (string.IsNullOrWhiteSpace(_configuration.Password))
+                throw new InvalidOperationException("SMTP password is required for basic mail authentication.");
+
+            var password = _configuration.Password.Decrypt(
+                _assemblyName,
+                "4D584868CCA84221823D53D80DB30FCB");
+
+            client.Authenticate(_configuration.UserName, password);
+        }
+
+        private void AuthenticateWithOAuth2(SmtpClient client)
+        {
+            if (_configuration == null) return;
+
+            if (string.IsNullOrWhiteSpace(_configuration.OAuthToken))
+                throw new InvalidOperationException("OAuthToken or AccessToken is required for OAuth2 mail authentication.");
+
+            var oauthToken = _configuration.OAuthToken.Decrypt(
+                _assemblyName,
+                "4D584868CCA84221823D53D80DB30FCB");
+
+            var oauth2 = new SaslMechanismOAuth2(_configuration.UserName, oauthToken);
+            client.Authenticate(oauth2);
         }
 
         private string StripHtmlTags(string html)

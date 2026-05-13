@@ -7,7 +7,7 @@
 
     <!-- Package Information -->
     <PackageId>Druware.Server</PackageId>
-    <Version>1.1.9</Version>
+    <Version>1.1.10</Version>
     <Title>Druware.Server</Title>
     <PackageTags>net6 net8 webapi</PackageTags>
     <Description>
@@ -47,7 +47,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.22">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.*">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
