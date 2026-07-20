@@ -350,8 +350,6 @@ MigrationBackup/
 .ionide/
 /.idea
 .DS_Store
-Druware.Server/.DS_Store
 
 CLAUDE.md
 .DS_Store
-/Druware.Server
