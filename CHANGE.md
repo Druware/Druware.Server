@@ -1,5 +1,27 @@
 # Changes
 
+## 2026-07-20 - 1.2.0
+
+* **Breaking:** Removed the public `Druware.Server.AutomapperProfile` type.
+  Consumers registering it via `cfg.AddProfile<AutomapperProfile>()` must drop
+  that registration and use the replacement below.
+* Removed the `AutoMapper` package dependency entirely.
+* Added `UserRegistrationModelExtensions` with `ToUser()` and `ApplyTo(user)`,
+  replacing the former `UserRegistrationModel` to `User` map. Behaviour is
+  unchanged: `FirstName`, `LastName`, and `Email` carry across, and `UserName`
+  is taken from `Email`.
+* Resolved all known NuGet vulnerabilities:
+  * Bumped `MailKit` 3.4.1 to 4.17.x, clearing the MailKit/MimeKit advisories
+    and their transitive `System.Security.Cryptography.Pkcs` exposure.
+  * Bumped `Microsoft.AspNetCore.Identity` and `Microsoft.AspNetCore.Mvc.Core`
+    from 2.2.x to 2.3.x.
+  * Removed the unused `Microsoft.AspNetCore.Server.Kestrel` (source of the
+    Critical Kestrel.Core advisory) and `Microsoft.AspNetCore.Server.IISIntegration`
+    references; neither is referenced by the library.
+  * Pinned `SQLitePCLRaw.bundle_e_sqlite3` (2.1.x) and
+    `System.Security.Cryptography.Xml` (8.0.4) above their vulnerable
+    transitive versions.
+
 ## 2026-07-20 - 1.1.12
 
 * Added a reusable `IEmailSender` abstraction and Azure Communication Services

@@ -1,5 +1,4 @@
 ﻿using System;
-using AutoMapper;
 using Druware.Server.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

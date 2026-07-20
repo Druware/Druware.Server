@@ -5,7 +5,6 @@ using MimeKit;
 using MimeKit.Text;
 using Druware.Extensions;
 using MailKit.Net.Smtp;
-using MailKit.Security;
 
 namespace Druware.Server
 {
