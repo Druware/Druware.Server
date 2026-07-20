@@ -353,3 +353,5 @@ MigrationBackup/
 Druware.Server/.DS_Store
 
 CLAUDE.md
+.DS_Store
+/Druware.Server
