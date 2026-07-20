@@ -16,6 +16,26 @@ for PostgreSQL though it can be altered to use SQL Server.  The migration
 should, in theory at least, detect the connection type, and select the right
 migration based upon that, it is not yet heavily tested though.
 
+## Azure Communication Services Email
+
+Applications can register the reusable Azure email transport with dependency
+injection:
+
+```csharp
+using Druware.Server.Email;
+
+builder.Services.AddDruwareAzureEmail(builder.Configuration);
+```
+
+Inject `IEmailSender` and send an `EmailMessage`. The sender address is read
+from `API:Mail:Azure:SenderAddress`, with `API:Notification:From` supported as
+a compatibility fallback. The Azure connection string is resolved first from
+the `COMMUNICATION_SERVICES_CONNECTION_STRING` environment variable, then from
+`API:Mail:Azure:ConnectionString`. Connection strings should be supplied by the
+deployment environment rather than committed to configuration files.
+
+The existing SMTP `MailHelper` remains available for legacy consumers.
+
 
 ## Dependencies
 

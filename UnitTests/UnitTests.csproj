@@ -20,6 +20,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Druware.Server\Druware.Server.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Using Include="NUnit.Framework"/>
     </ItemGroup>
 
