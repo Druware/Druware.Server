@@ -1,6 +1,5 @@
 using System.Text;
 using Microsoft.Extensions.Configuration;
-
 namespace Druware.Server;
 
 public enum MailType
@@ -9,6 +8,12 @@ public enum MailType
     Pop3 = 1,
     Imap = 2,
     Web = 3
+}
+
+public enum MailAuthenticationType
+{
+    Basic = 0,
+    OAuth2 = 1
 }
 
 public enum DbContextType
@@ -40,17 +45,30 @@ public class MailSettings
 
         HostName = section.GetValue<string>("Host");
         Port = section.GetValue<int>("Port");
-        UserName = section.GetValue<string>("User");
-        Password = section.GetValue<string>("Password");
+        UserName = userName ?? section.GetValue<string>("User");
+        Password = password ?? section.GetValue<string>("Password");
+        OAuthToken = section.GetValue<string>("OAuthToken") ?? section.GetValue<string>("AccessToken");
         Type = type;
+
+        var authentication = section.GetValue<string>("Authentication")
+            ?? section.GetValue<string>("AuthType")
+            ?? section.GetValue<string>("AuthenticationType");
+
+        AuthenticationType = authentication?.Equals("OAuth2", StringComparison.OrdinalIgnoreCase) == true
+            || authentication?.Equals("OAuth", StringComparison.OrdinalIgnoreCase) == true
+            ? MailAuthenticationType.OAuth2
+            : MailAuthenticationType.Basic;
     }
 
     public string? HostName { get; private set; }
     public string? UserName { get; private set; }
     public int Port { get; private set; }
     public string? Password { get; private set; }
+    public string? OAuthToken { get; private set; }
     public MailType Type { get; private set; }
+    public MailAuthenticationType AuthenticationType { get; private set; }
 }
+
 
 public class NotificationSettings
 {
