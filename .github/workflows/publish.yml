@@ -35,7 +35,7 @@ jobs:
     env:
       PROJECT: Druware.Server/Druware.Server.csproj
       TEST_PROJECT: UnitTests/UnitTests.csproj
-      PKG_ID: Druware.Extensions
+      PKG_ID: Druware.Server
 
     steps:
       - name: Checkout
