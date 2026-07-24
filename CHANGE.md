@@ -1,5 +1,17 @@
 # Changes
 
+## 2026-07-24
+
+* Actually dropped the `AutoMapper` package reference. The 1.2.0 entry below
+  recorded this, but only the code changes landed - the reference stayed in the
+  project file, so every published package continued to declare
+  `AutoMapper >= 12.0.0` and carried CVE-2026-32933 into consumers that had no
+  AutoMapper usage of their own. The library has had no AutoMapper code since
+  `UserRegistrationModelExtensions` replaced it.
+* Note: the other dependency changes listed under 1.2.0 (MailKit, Kestrel,
+  IISIntegration, Identity, Mvc.Core, the pinned transitives) also never landed
+  in the project file and are still outstanding.
+
 ## 2026-07-20 - 1.2.0
 
 * **Breaking:** Removed the public `Druware.Server.AutomapperProfile` type.
