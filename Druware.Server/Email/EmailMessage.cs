@@ -9,6 +9,7 @@ public sealed class EmailMessage
     public ICollection<EmailRecipient> Cc { get; init; } = new List<EmailRecipient>();
     public ICollection<EmailRecipient> Bcc { get; init; } = new List<EmailRecipient>();
     public ICollection<EmailRecipient> ReplyTo { get; init; } = new List<EmailRecipient>();
+    public ICollection<EmailAttachment> Attachments { get; init; } = new List<EmailAttachment>();
     public string Subject { get; init; } = string.Empty;
     public string? HtmlBody { get; init; }
     public string? PlainTextBody { get; init; }

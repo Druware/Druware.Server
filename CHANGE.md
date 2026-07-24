@@ -1,3 +1,11 @@
+## 2026-07-24 - email attachments
+
+* Added `EmailAttachment` (file name, content type, bytes) and an `Attachments`
+  collection on `EmailMessage`, carried through to Azure Communication Services.
+  Messages without attachments are unaffected.
+* Attachments are validated alongside the rest of the message: a missing file
+  name or content type throws rather than reaching Azure.
+
 # Changes
 
 ## 2026-07-24 - dependency advisories
@@ -79,5 +87,3 @@ is housekeeping rather than a fix.
 * Moved Tag from Content to Server
 * Added license headers to all relevant files
 * Added an Access Log to the Server space to enable access reporting and auditing
-
-

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using AzureEmailMessage = Azure.Communication.Email.EmailMessage;
 using DruwareEmailMessage = Druware.Server.Email.EmailMessage;
+using DruwareEmailAttachment = Druware.Server.Email.EmailAttachment;
 
 namespace UnitTests;
 
@@ -114,6 +115,85 @@ public class AzureCommunicationEmailSenderTests
                 message.To.Add(new EmailRecipient(" "));
                 break;
         }
+
+        var sender = CreateSender(new RecordingEmailClient());
+
+        Assert.That(
+            async () => await sender.SendAsync(message),
+            Throws.ArgumentException);
+    }
+
+    [Test]
+    public async Task SendAsync_CarriesAttachmentsThrough()
+    {
+        var client = new RecordingEmailClient { OperationId = "operation-456" };
+        var sender = CreateSender(client);
+        var content = new byte[] { 0x25, 0x50, 0x44, 0x46 }; // "%PDF"
+        var message = new DruwareEmailMessage
+        {
+            To = { new EmailRecipient("recipient@example.com") },
+            Attachments =
+            {
+                new DruwareEmailAttachment("onboarding.pdf", "application/pdf", content)
+            },
+            Subject = "Subject",
+            PlainTextBody = "Body"
+        };
+
+        var result = await sender.SendAsync(message);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Succeeded, Is.True);
+            Assert.That(client.Message!.Attachments, Has.Count.EqualTo(1));
+            Assert.That(client.Message.Attachments.Single().Name, Is.EqualTo("onboarding.pdf"));
+            Assert.That(client.Message.Attachments.Single().ContentType, Is.EqualTo("application/pdf"));
+            Assert.That(
+                client.Message.Attachments.Single().Content.ToArray(),
+                Is.EqualTo(content));
+        });
+    }
+
+    [Test]
+    public async Task SendAsync_SendsNoAttachments_WhenNoneSupplied()
+    {
+        var client = new RecordingEmailClient();
+        var sender = CreateSender(client);
+
+        await sender.SendAsync(ValidMessage());
+
+        Assert.That(client.Message!.Attachments, Is.Empty);
+    }
+
+    [TestCase("")]
+    [TestCase("   ")]
+    public void SendAsync_ThrowsForAttachmentWithoutAFileName(string fileName)
+    {
+        var message = new DruwareEmailMessage
+        {
+            To = { new EmailRecipient("recipient@example.com") },
+            Attachments = { new DruwareEmailAttachment(fileName, "application/pdf", new byte[] { 0x01 }) },
+            Subject = "Subject",
+            PlainTextBody = "Body"
+        };
+
+        var sender = CreateSender(new RecordingEmailClient());
+
+        Assert.That(
+            async () => await sender.SendAsync(message),
+            Throws.ArgumentException);
+    }
+
+    [Test]
+    public void SendAsync_ThrowsForAttachmentWithoutAContentType()
+    {
+        var message = new DruwareEmailMessage
+        {
+            To = { new EmailRecipient("recipient@example.com") },
+            Attachments = { new DruwareEmailAttachment("onboarding.pdf", " ", new byte[] { 0x01 }) },
+            Subject = "Subject",
+            PlainTextBody = "Body"
+        };
 
         var sender = CreateSender(new RecordingEmailClient());
 

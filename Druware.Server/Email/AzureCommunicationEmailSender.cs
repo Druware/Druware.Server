@@ -85,6 +85,12 @@ public sealed class AzureCommunicationEmailSender : IEmailSender
         foreach (var replyTo in message.ReplyTo)
             azureMessage.ReplyTo.Add(ToAzureAddress(replyTo));
 
+        foreach (var attachment in message.Attachments)
+            azureMessage.Attachments.Add(new Azure.Communication.Email.EmailAttachment(
+                attachment.FileName,
+                attachment.ContentType,
+                BinaryData.FromBytes(attachment.Content)));
+
         try
         {
             var operationId = await _client.SendAsync(
@@ -128,6 +134,23 @@ public sealed class AzureCommunicationEmailSender : IEmailSender
         {
             throw new ArgumentException(
                 "Recipient collections cannot be null.",
+                nameof(message));
+        }
+
+        if (message.Attachments == null)
+        {
+            throw new ArgumentException(
+                "The attachment collection cannot be null.",
+                nameof(message));
+        }
+
+        if (message.Attachments.Any(attachment =>
+                attachment == null
+                || string.IsNullOrWhiteSpace(attachment.FileName)
+                || string.IsNullOrWhiteSpace(attachment.ContentType)))
+        {
+            throw new ArgumentException(
+                "Attachments require a file name and a content type.",
                 nameof(message));
         }
 
