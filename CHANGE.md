@@ -1,16 +1,31 @@
 # Changes
 
-## 2026-07-24
+## 2026-07-24 - dependency advisories
 
-* Actually dropped the `AutoMapper` package reference. The 1.2.0 entry below
-  recorded this, but only the code changes landed - the reference stayed in the
-  project file, so every published package continued to declare
-  `AutoMapper >= 12.0.0` and carried CVE-2026-32933 into consumers that had no
-  AutoMapper usage of their own. The library has had no AutoMapper code since
-  `UserRegistrationModelExtensions` replaced it.
-* Note: the other dependency changes listed under 1.2.0 (MailKit, Kestrel,
-  IISIntegration, Identity, Mvc.Core, the pinned transitives) also never landed
-  in the project file and are still outstanding.
+Applies the dependency changes the 1.2.0 entry below described but never made -
+that commit edited only code, leaving every `PackageReference` untouched, so
+the advisories it claimed to resolve shipped in every package since.
+
+* Dropped the `AutoMapper` reference. No library code has used it since
+  `UserRegistrationModelExtensions` replaced the profile; the reference alone
+  was carrying CVE-2026-32933 into consumers.
+* Bumped `MailKit` 3.4.1 to 4.17.x, clearing the MailKit advisory plus the
+  transitive `MimeKit` and `System.Security.Cryptography.Pkcs` ones.
+  `MailHelper` needed no source changes.
+* Removed the unused `Microsoft.AspNetCore.Server.Kestrel` reference, source of
+  the Critical `Kestrel.Core` advisory. Nothing in the library referenced it -
+  a web host supplies its own server.
+* Bumped `Microsoft.AspNetCore.Identity` and `Microsoft.AspNetCore.Mvc.Core`
+  from 2.2.x to 2.3.x.
+* Pinned `SQLitePCLRaw.bundle_e_sqlite3` to 2.1.12 and
+  `System.Security.Cryptography.Xml` to 8.0.x, above the vulnerable versions
+  reached transitively through EF Core Sqlite and DataProtection.
+
+`dotnet list package --vulnerable --include-transitive` now reports nothing.
+
+`Microsoft.AspNetCore.Server.IISIntegration` is deliberately left in place. It
+carries no advisory and is not in the Kestrel dependency chain, so removing it
+is housekeeping rather than a fix.
 
 ## 2026-07-20 - 1.2.0
 
