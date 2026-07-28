@@ -1,5 +1,50 @@
 # Changes
 
+## 2026-07-28 - compiler warnings and deprecated dependencies
+
+`MailHelper` produced three `CS8604` possible-null-reference warnings on a
+full rebuild. Fixed by validating rather than suppressing:
+
+* `SendMessage` now throws `InvalidOperationException` if the configured
+  `HostName` is missing, before attempting `client.Connect`. There was
+  previously no check at all on the host name.
+* `AuthenticateClient` already validated `UserName`, but the compiler could
+  not carry that through to `AuthenticateWithBasicCredentials` and
+  `AuthenticateWithOAuth2`. Those two private methods now take the validated
+  user name as a parameter. No behaviour change - the same guard runs, in
+  the same place.
+
+The build is now warning-free. No `#pragma` suppressions and no
+null-forgiving operators were used.
+
+`dotnet list package --deprecated --include-transitive` reported twelve
+deprecated packages. All but one arrived through `Microsoft.Data.SqlClient`
+5.1.x, which `Microsoft.EntityFrameworkCore.SqlServer` pulls in:
+`Azure.Identity` 1.11.4, `Microsoft.Identity.Client` 4.61.3 and its Msal
+extensions, the `Microsoft.IdentityModel` / `System.IdentityModel.Tokens.Jwt`
+6.35.0 family, and `System.Text.Json` 4.7.2.
+
+* Pinned `Microsoft.Data.SqlClient` to 6.1.x. It carries `Azure.Identity`
+  1.17.x, `Microsoft.Identity.Client` 4.84.x and `Microsoft.IdentityModel`
+  7.7.x, none deprecated. `System.Text.Json` drops out of the graph
+  entirely - it is in-box on net8.0. Note that 5.2.x does not help here: it
+  still pins the same deprecated `Azure.Identity` and `IdentityModel`
+  versions, so 6.1.x was the lowest version that clears them.
+* **Consumer-facing:** `Microsoft.Data.SqlClient` 6.1.x is now a public
+  dependency of the package, so consumers move up with it. It is verified
+  working against the EF Core 8 SqlServer provider - query and migration
+  SQL generation and connection binding were all exercised - but it has not
+  been tested against a live SQL Server instance.
+* Pinned `System.Collections.Immutable` to 8.0.x with `PrivateAssets`, the
+  last deprecated entry. It reaches the project only through
+  `Microsoft.CodeAnalysis` 4.5.0 under the build-time EF Core Tools/Design
+  packages, so the pin is deliberately kept out of the package's public
+  dependency list.
+
+`dotnet list package --deprecated --include-transitive` and
+`--vulnerable --include-transitive` both now report nothing for either
+project, and the build reports no warnings.
+
 ## 2026-07-24 - email attachments
 
 * Added `EmailAttachment` (file name, content type, bytes) and an `Attachments`

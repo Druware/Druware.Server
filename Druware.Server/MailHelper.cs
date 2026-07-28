@@ -171,6 +171,9 @@ namespace Druware.Server
         {
             if (_configuration == null) return;
 
+            if (string.IsNullOrWhiteSpace(_configuration.HostName))
+                throw new InvalidOperationException("SMTP host name is required to send mail.");
+
             using var client = new SmtpClient(new ProtocolLogger(Console.OpenStandardOutput()));
             client.Connect(_configuration.HostName, _configuration.Port, SecureSocketOptions.SslOnConnect);
 
@@ -190,17 +193,17 @@ namespace Druware.Server
             switch (_configuration.AuthenticationType)
             {
                 case MailAuthenticationType.OAuth2:
-                    AuthenticateWithOAuth2(client);
+                    AuthenticateWithOAuth2(client, _configuration.UserName);
                     break;
 
                 case MailAuthenticationType.Basic:
                 default:
-                    AuthenticateWithBasicCredentials(client);
+                    AuthenticateWithBasicCredentials(client, _configuration.UserName);
                     break;
             }
         }
 
-        private void AuthenticateWithBasicCredentials(SmtpClient client)
+        private void AuthenticateWithBasicCredentials(SmtpClient client, string userName)
         {
             if (_configuration == null) return;
 
@@ -211,10 +214,10 @@ namespace Druware.Server
                 _assemblyName,
                 "4D584868CCA84221823D53D80DB30FCB");
 
-            client.Authenticate(_configuration.UserName, password);
+            client.Authenticate(userName, password);
         }
 
-        private void AuthenticateWithOAuth2(SmtpClient client)
+        private void AuthenticateWithOAuth2(SmtpClient client, string userName)
         {
             if (_configuration == null) return;
 
@@ -225,7 +228,7 @@ namespace Druware.Server
                 _assemblyName,
                 "4D584868CCA84221823D53D80DB30FCB");
 
-            var oauth2 = new SaslMechanismOAuth2(_configuration.UserName, oauthToken);
+            var oauth2 = new SaslMechanismOAuth2(userName, oauthToken);
             client.Authenticate(oauth2);
         }
 

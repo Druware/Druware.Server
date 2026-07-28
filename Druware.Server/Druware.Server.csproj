@@ -57,6 +57,20 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.*" />
+    <!-- Pinned above the deprecated versions dragged in transitively:
+         Microsoft.Data.SqlClient 5.1.x (via Microsoft.EntityFrameworkCore.SqlServer)
+         pins Azure.Identity 1.11.4, Microsoft.Identity.Client 4.61.3 and the
+         Microsoft.IdentityModel / System.IdentityModel.Tokens.Jwt 6.35.0 family,
+         plus System.Text.Json 4.7.2 - all deprecated. 6.1.x moves them to
+         Azure.Identity 1.17.x, Microsoft.Identity.Client 4.84.x and
+         Microsoft.IdentityModel 7.7.x. System.Collections.Immutable 6.0.0 comes in
+         via Microsoft.CodeAnalysis 4.5.0 under the EntityFrameworkCore
+         Tools/Design build-time packages, so it is pinned privately - it is not
+         part of this library's public dependency contract. -->
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.*" />
+    <PackageReference Include="System.Collections.Immutable" Version="8.0.*">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.*" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.*" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.*" />
