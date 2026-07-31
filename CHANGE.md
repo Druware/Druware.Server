@@ -9,7 +9,7 @@ full rebuild. Fixed by validating rather than suppressing:
   `HostName` is missing, before attempting `client.Connect`. There was
   previously no check at all on the host name.
 * `AuthenticateClient` already validated `UserName`, but the compiler could
-  not carry that through to `AuthenticateWithBasicCredentials` and
+  not carry that through to `AuthenticateWithBasicCredentials` and2
   `AuthenticateWithOAuth2`. Those two private methods now take the validated
   user name as a parameter. No behaviour change - the same guard runs, in
   the same place.
