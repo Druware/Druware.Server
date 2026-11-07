@@ -43,7 +43,7 @@
          SQLitePCLRaw.lib.e_sqlite3 2.1.6 (GHSA-2m69-gcr7-jv3q) via the bundle,
          and System.Security.Cryptography.Xml 4.5.0 (GHSA-vh55-786g-wjwj) via
          Microsoft.AspNetCore.DataProtection. -->
-    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.12" />
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.13" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.*" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.*" />

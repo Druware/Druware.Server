@@ -1,5 +1,13 @@
 # Changes
 
+## 2026-11-06 - expired sessions return 401
+
+* `CustomController.UpdateUserAccess` now answers an expired session (the 30 minute idle timeout) with HTTP 401 Unauthorized instead of 200 OK. The user is still signed out first, and the body is unchanged: `Result.Error("Session has expired, user must log in.")`, same message text. Previously the 200 let clients treat the response as a normal error and stay "logged in". Every controller action that calls `UpdateUserAccess` returns its non-null result, so the 401 reaches the client from all of them. The "Unable to find User" result is unchanged and still a 200.
+* **Consumer-facing:** a client that only reads the body still sees the same failed `Result`; a client that treats any non-2xx as a transport failure will now see a 401 for an expired session and should send the user to log in.
+* `Mvc.Core` 2.3 has no `Unauthorized(object)` overload, so the result is `StatusCode(401, ...)`, an `ObjectResult` with a 401 status code.
+* Pinned `SQLitePCLRaw.bundle_e_sqlite3` up from 2.1.12 to 2.1.13. `Microsoft.EntityFrameworkCore.Sqlite` 8.0.33, which the `8.0.*` range now resolves, requires 2.1.13 or later, and the 2.1.12 pin failed restore with NU1605 (package downgrade, treated as an error).
+* Tests cover `UpdateUserAccess` against a real Identity stack on an in-memory Sqlite `ServerContext`: an expired session returns 401 with the message and clears the Identity cookie, an active session returns null and extends `SessionExpires`, and an unknown user still gets the 200 error.
+
 ## 2026-07-28 - compiler warnings and deprecated dependencies
 
 `MailHelper` produced three `CS8604` possible-null-reference warnings on a

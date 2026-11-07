@@ -51,9 +51,11 @@ namespace Druware.Server
 
             if (user.IsSessionExpired())
             {
-                // log the user out, and move on
+                // log the user out, and report it as a 401 so clients know
+                // to log in again. Mvc.Core 2.3 has no Unauthorized(object).
                 await SignInManager.SignOutAsync();
-                return Ok(Result.Error("Session has expired, user must log in."));
+                return StatusCode(StatusCodes.Status401Unauthorized,
+                    Result.Error("Session has expired, user must log in."));
             }
 
             // get the route for the 'Where', and the method for the 'How'
